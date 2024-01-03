@@ -1,0 +1,41 @@
+DOCUMENTATION COMMENTS
+/// I am a documentation comment
+/// at your service.
+/**
+* Me Too!
+*/
+
+DIVISION
+22/7 - returns decimal
+9 ~/ 2 - truncates the decimal part
+
+
+IMPORTING
+import 'dart:math';
+sin(pi);
+
+OR named import:
+import 'dart:math' as MATH;
+MATH.sin(MATH.pi);
+
+Some functions from dart:math
+- sqrt
+- max
+- min
+
+
+EVERYTHING IS AN OBJECT
+Dart doesn't have the primitive variable types that exist in some languages. Everything is an object and can be null, e.g, an int can be null (int?)
+int foo = 8;
+double bar = 3.142;
+
+print(foo.isEven);
+print(bar.round());
+
+
+Type Inference
+You don’t even have to tell it the type of a variable, and Dart can still figure out what you mean.
+var someNumber = 10;
+someNumber = 15; // OK
+someNumber = 3.14159; // No, no, no.
+

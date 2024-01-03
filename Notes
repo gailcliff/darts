@@ -1,0 +1,1410 @@
+Everything is an object in Dart, e.g, you can do 31.isEven, 7.45.round()
+
+'const' variable annotator is used for compile time constants whose value you are sure of before
+execution of the program, e.g const limit = 10
+
+'final' variable annotator is for runtime constants whose value you don't particularly know until
+something happens, e.g final time = DateTime.now()
+
+Getting milliseconds since epoch: DateTime.now().millisecondsSinceEpoch - this value is independent of timezone
+
+***
+In Dart, attributes that describe the state of objects are accessed directly without method notation, e.g
+int j = 91;
+To check if j is even, you don't do
+j.isEven()
+you do: j.isEven
+In other words, these are getters.
+
+Checking type at runtime:
+1. object.runtimeType - returns the runtime type of the object
+2. object is (type): returns bool. e.g print(9 is int) returns true
+
+(double_value).truncate() is the same as (double_value).toInt()
+
+Type casting in Dart is done using the keyword 'as'
+INSTEAD OF THIS IN JAVA:
+Plant a;
+Mango b; //mango is a child of plant
+b = (Mango) a;
+IT'S LIKE THIS IN DART
+Plant a;
+Mango b; //mango is a child of plant
+b = a as Mango;
+
+In Dart, you can only cast down to a subtype/sibling of parent class(in inheritance). E.g, you can't cast double to int direct like in java.
+Dart has no primitive types. Each type is a class.
+
+
+
+IN DART, EVERYTHING IS A CLASS (INSTANCE OF A CLASS)
+EVEN PRIMITIVE TYPES LIKE int, double AND bool ARE CLASSES.
+
+In Java where something like:
+int j = 9;
+double d = j;
+is possible, in Dart it is not, because int and double are siblings (which both inherit from num, which inherits from Object).
+Because they are siblings, you can't really assign variables of either to the other.
+E.g: Let's say you have a class called Animal; Dog and Cat inherit from Animal.
+You can't say, Dog dog = new Cat(); or vice-versa.
+Also, you can't say Dog dog = new Animal(); because that just doesn't work in object-oriented programming.
+However, you can say Animal animal = new Dog();
+
+With that in mind, you can't say:
+  num u = 10;
+  int w = u;
+Intuitively, it should be possible to do that, but object-oriented programming principles just make it not possible, because
+these in Dart are not primitive, they are actual classes.
+However, you can do this:
+  int r = 58;
+  num x = r;
+Since num is the parent class and int is a child of num, you can assign an instance of num to int.
+
+
+
+---STRINGS---
+Use StringBuffer to concatenate many strings into one
+var a = StringBuffer();
+a.write();
+...
+a.toString();
+
+Interpolation: build a string using interpolation ($)
+var name = 'cliff';
+var greeting = "Hello, $name";
+final sentence = 'One third is ${oneThird.toStringAsFixed(3)}.';
+print("Sin of 30 degrees is:\t${math.sin(math.pi/6)}");
+Use '${}' for longer or more complicated interpolations e.g calling a function within the interpolation.
+
+
+Multi-line strings: ''' ''' OR """ """
+One-line multiple:
+'She sells sea shells '
+'at the '
+'sea shore.';
+
+PARSING STRING TO INT OR DOUBLE
+int? a = int.tryParse("583");
+double? b = double.tryParse("6.0");
+If you use tryParse, type has to be nullable (?), i.e you can't do:
+    int c = int.tryParse("43"); even if the string is actually parsable. The type has to be nullable since parsing
+    could return null. So do:
+    int? c = int.tryParse('43');
+If not parsable, will return null.
+
+int j = int.parse("45"); - can throw exception if not parsable.
+
+Can parse bool too:
+  bool? j = bool.tryParse('False');
+  print(j);
+
+
+String length: str.length
+
+------
+use the keyword 'dynamic' to allow the variable to change types at runtime
+or better yet, use the type 'Object' or Object?(to allow null - done on purpose - programmer knows usage)
+
+------
+
+CONDITIONALS / CONTROL FLOW
+
+bool - data type for true/false
+bool operations are same as Java (and, or, not etc)
+
+COMPARING STRINGS IN DART
+Use == operator. Not as constricting as Java where you have to use equals
+String guess = 'dog';
+const dogEqualsCat = guess == 'cat';
+
+IF, ELSE, ELSE IF - same as Java
+
+TERNARY CONDITIONAL OPERATOR (?:) - Same as Java.
+const score = 83;
+const message = (score >= 60) ? 'You passed' : 'You failed';
+
+SWITCH STATEMENTS - same as Java
+
+
+IMPORTING / IMPORT STATEMENTS
+Simple import statement: import 'dart:math';
+Named import: import 'dart:math' as math;
+
+--Importing partially (use show and hide)--
+import dart:math show pi, sqrt; - only imports the specified variables/functions/classes/e.t.c
+Hiding stuff from a class while importing: import dart:math hide pi; - enables you to access all stuff from the library except pi.
+Declaring a library name for a file:
+
+library foo;
+...other statements follow after library declaration
+
+Making a file a part of another.
+
+//file_a.dart - parent file
+library a;
+part "file_b.dart";
+
+//file_b.dart - child file
+part of a; //or part of 'file_a.dart'. Must use quotes when you include .dart
+
+To note:
+When you declare a library name, the library directive must come before all other directives.
+You can't have methods with the same name separately in the parent file and the child file.
+You can't include import statements or any other directives apart from 'part of...' in the child file.
+'import' directives must precede 'part' directives in the parent file, because the child file might need to use some
+of the imports; so the imports are declared before the child file is declared.
+
+What is the use of library keyword in dart?
+It really is just to give a name to the library, so that library parts can start with "part of library.name;".
+The system can give a warning if you import two libraries with the same name (which could be a sign that you import
+the same library via two different paths). It's not used for anything else.
+-----
+ENUMS
+how to create, e.g enum Colors {RED, GREEN, BLUE};
+enum is a construct on its own, used at the global level.
+
+Example:
+
+const weatherToday = Weather.cloudy;
+switch (weatherToday) {
+    case Weather.sunny:
+        print('Put on sunscreen.');
+        break;
+    case Weather.snowy:
+        print('Get your skis.');
+        break;
+    case Weather.cloudy:
+    case Weather.rainy:
+        print('Bring an umbrella.');
+        break;
+}
+
+----------LOOPS----------------
+for
+while
+do..while
+Same as Java
+
+-----RANDOM VALUES------
+To generate randoms, construct, e.g var rand = new Random() - imported from dart:math
+and then to get int, use rand.nextInt(max_value). max_value is exclusive
+
+Generate a random double:
+use new Random().nextDouble() - generates a random double btwn 0 and 1 (1 is exclusive)
+
+---FOR IN LOOP---
+for (var a in b) { //b is an iterable
+ //statement
+}
+
+---FOR EACH LOOP----
+Used to do something for each value in a collection/iterable, e.g
+const names = ["Clifford", "Gail", "Odhiambo", "Nyanga"];
+  names.forEach((element) {
+    print("Name: $element");
+  });
+
+  Alternative syntax:
+  names.forEach((element) => print("Name: $element"));
+
+
+---FUNCTIONS-----
+if you want the return value to be nullable, i.e return null, put a '?' in the function return type
+e.g String? getUsername() {....}
+
+if you want an argument to be nullable, e.g func(null), put a '?' in the parameter construct
+e.g String getPassword(String? userName) {....}
+
+if you want an argument to optional, i.e not necessarily supplied, use square brackets around the params each with ?
+e.g String getPassword(String userName, [String? email]) {....}
+
+if you want set default arguments
+e.g String getPassword(String userName, [String email=""]) {....}
+
+if you want named arguments
+e.g String getPassword(String userName, {int dob=-1, String email = ""}) {...}
+Named arguments can be passed in whatever order. Positional arguments come before named arguments
+Keyword arg function e.g above is called using a colon(:) like this:
+getPassword('foo', dob: 5, email: 'john@doe.com');
+!!!Named parameters in Dart functions and constructors can't start with an underscore
+
+if you want required/compulsory named arguments
+e.g String getPassword(String userName, {required int dob, String email = ""}) {...}
+!!! REQUIRED NAMED ARGUMENTS CAN'T HAVE DEFAULT VALUES, e.g required String name = "john doe" - illegal
+
+!!!Make it your ambition to maximize your use of pure functions (functions with no side effects, or functions
+which do not affect the value of variable outside their scope), and minimize your use of functions with side effects.
+
+Write your functions so that each one has only a single job to do. If you find yourself adding comments
+to describe different sections of a complex function, that’s usually a good clue that you should break your
+function up into smaller functions.
+
+Functions can't be const.
+
+In Dart, functions are FIRST-CLASS CITIZENS. That means you can treat them like any other other type,
+assigning functions as values to variables and even passing functions around as parameters or returning
+them from other functions.
+
+ANONYMOUS FUNCTIONS
+Sometimes you only need functions in one specific spot in your code, for one specific reason, and there’s no reason to give that function a name
+e.g instead of: String sayHello(var name) {...}
+you do: (var name) {...}
+You can declare an anonymous function and call it at the same time, e.g:
+(int c){
+    print(c*c);
+}(10); // we call it right after declaring it
+
+var j = (int c){
+    return c*c*c;
+}(10); # this function calls itself and returns the result 1000 and which is placed in the variable j.
+
+print(j); // will print 1000
+
+You can return a function from a function.
+    Function b () {
+    return ()=> print("works!");
+    }
+
+    Function namedFunction() {
+    return () {
+    print('hello');
+    };
+    }
+
+Working Example
+    Function power (int exponent) {
+      return (int number) {
+        return math.pow(number, exponent);
+      };
+    }
+    var powerFn = power(2);
+    print(powerFn(2));
+    print(powerFn(3));
+    print(powerFn(5));
+
+
+
+You can pass a function as an argument to another function.
+void b(Function c) {
+call c;
+....
+}
+
+You can call a function using the call() method of the Function class (remember, each type is an Object in Dart). Function
+is itself a class which has a call() function.
+So you can call a function by doing: functionName.call();
+E.g
+
+void helloWorld() {
+  print("Hola, world!");
+}
+
+var yo = helloWorld; // you can assign a function to a variable like this without calling it. just remove the brackets so that you don't call it inadvertently
+yo.call(); // this is an alternative to calling it traditionally...
+yo(); // like so
+
+Use arrow functions to make more concise methods, e.g int multiply (int a, int b) => a * b;
+
+***In Dart, functions are first-class citizens; they can be treated just like other types, i.e
+passed as arguments, returned from functions, assigned to variables e.t.c
+
+YOU CAN'T COMBINE BOTH OPTIONAL POSITIONAL PARAMETERS [] AND NAMED PARAMETERS {} IN THE SAME FUNCTION SIGNATURE.
+IN A SITUATION WHERE YOU NEED BOTH, JUST OPT TO USE NAMED PARAMETERS ONLY
+
+
+-----CLASSES-------
+All values in Dart are objects that are built from a class. This includes the values of basic types
+like int, double and bool. Dart doesn't have primitive types.
+
+All classes in Dart (well, except for Null, but that’s a topic for Chapter 7) are derived from Object,
+which has a toString method. In this case, your object doesn’t tell Dart how to write its internal data
+when you call toString on it, so Dart gives you this generic, default output instead.
+However, you can override the Object class’s version of toString by writing your own implementation
+of toString, and thus customize how your own object will print out.
+
+Override the toString method to define your own String representation of the class.
+@override
+String toString() {
+    return 'User(id: $id, name: $name)';
+}
+
+Dart offers a cascade operator (..) that allows you to chain together multiple assignments on the same
+object without having to repeat the object name. The following code is equivalent:
+
+final user = User()
+..name = 'Ray'
+..id = 42;
+
+
+You can't access class instance methods/members during member variable initialization.
+E.g, you can't do:
+class Foo {
+  String ay = "yo";
+  String bar = ay; //error
+}
+
+ONLY STATIC FIELDS can be declared as const in a class.
+
+Long-form constructor: (Same as Java)
+User(int id, String name) {
+    this.id = id;
+    this.name = name;
+}
+
+Short-form constructor:
+class User {
+    var fname, lname, gender;
+    User(this.fname, this.lname, this.gender);
+    //you set the values implicitly
+}
+
+NAMED CONSTRUCTORS
+If you want to use different constructors for the same class, you use named constructors apart from the main one
+In other languages like Java, you would just use different types/number of parameters and it would work (i.e, overload the constructor)
+But in Dart, you do this:
+e.g
+class User {
+
+User (...) {...} //this is the main constructor
+User.Trial (...) {...} //these are
+User.Verified (...) {...} //alternative
+User.Cancelled (...) {...} //constructors whose need may arise for different purposes/situations.
+}
+
+FORWARDING/REDIRECTING CONSTRUCTORS
+A way in Dart of being able to initialize another constructor in the same class.
+It's a *RE*-DIRECTING constructor, so you don't initialize the class members in the (...) part of the
+constructor. Instead, you *re*-direct it to the desired constructor like so...
+
+    User.Default(): this(-1, "John Doe");
+by using a colon.
+
+In other words, you forward the properties to the desired constructor and initialize them there, not on the forwarding constructor.
+-BASICALLY, A REDIRECTING CONSTRUCTOR CAN'T HAVE A FIELD INITIALIZER. You can't initialize variables here.
+
+Forwarding/redirecting constructors CAN'T HAVE A BODY. Their work is just to re-direct.
+e.g
+User (String name, String? password) {...}
+
+User.Tester (String name) : this("john doe", null);
+
+//OR to call an alternate constructor
+User.ShortTrial () : this.Tester("N/A");
+
+!!!You can't call the constructor as a method within BODY of your constructor method like in Java; e.g
+    User.Foo() {
+        this(foo, bar);
+    }
+
+
+INITIALIZER LISTS
+Used if you want to initialize class members in a constructor before the body of the constructor starts
+e.g User({int id = 0, String name = 'anonymous'}) : _id = id, _name = name;
+
+!!!Named parameters in Dart functions and constructors can't start with an underscore
+
+The initializer list is always executed before the body of the constructor, if the body exists.
+You don’t need a body for this constructor - can leave body out - {} - if you don't need it.
+
+
+PRIVATE VARIABLES
+To make a variable private, use an underscore in its name at the start, e.g var _date;
+
+Using an underscore before a variable or method name makes it LIBRARY private, not class private. A library is simply a file.
+Private variables in a class are still accessible anywhere within the file.
+
+ASSERT KEYWORD
+Use assert keyword to check for sanity checks for errors
+e.g in a constructor
+    String _name;
+    User (String name) : assert(name != null), _name = name;
+
+Customary to put assert statements at top of initializer list.
+An assert statement checks a condition, and if the condition is false, terminates the app.
+This only happens during debugging, though. The compiler completely ignores assert statements in release builds.
+
+
+MAKING CLASS PROPERTIES IMMUTABLE
+To make properties immutable in your class, make them 'final'
+However, ALL final properties have to be initialized within the constructors.
+
+If any property in your class is const, the property has to be static too. Only static fields can be declared as const.
+You can't declare something as both const and final.
+
+Class instance methods can't be static.
+
+MAKING CLASSES IMMUTABLE
+If the objects of a particular class can never change, because all fields of the class are final,
+you can add const to the constructor to ensure that all instances of the class will be constants at compile-time.
+
+You can't define a 'const' constructor for a class with non-final fields.
+If you make any class constructor 'const', all properties of that class have to be final, they can't be non-final.
+The class when initialized now becomes a COMPILE-TIME CONSTANT.
+Since the class is a compile-time constant, you can't put runtime stuff onto the constructor. You can only put constant expressions.
+Const constructors CAN'T HAVE A BODY. This is because there's a risk that you might put runtime stuff within the body of the constructor, but the constructor
+has to be a compile-time constant.
+
+If a constructor is not defined as const, you can't initialize an instance of the class as const:
+e.g
+const person = Person(firstName: "C", lastName: "G");
+is not valid if the Person constructor being referred to isn't const.
+
+'const' constructors cannot have a body, because the body may contain runtime stuff that render the instance of the class
+not a compile-time constant.
+!!!Basically, you can't have runtime checks inside a constant constructor.
+
+A constant redirecting constructor can't redirect to a non-constant constructor
+
+You can't instantiate a class by using 'const' if the constructor you're initializing is not const.
+E.g User user = const User(); and User doesn't have a const constructor like so:
+const User ();
+So these are illegal if the constructor isn't const:
+const User user = User(); OR User user = const User();
+
+If the constructor whose instance you're initializing is const and you're initializing using the 'const' keyword:
+i.e: class C {
+       final String j;
+       const C(this.j);
+     }
+Then the arguments provided to the constructor MUST BE CONSTANT EXPRESSIONS.
+This is legal: C c = const C("Hello!");
+But this is illegal: C c = const C("Hello!".toUpperCase()) - because it's a runtime check and not a compile-time constant
+This is also illegal: const C c = C("Hello!".toUpperCase())
+
+
+To make a class immutable, use the keyword 'const' in front of the constructor.
+E.g
+final name;
+const User(this.name);
+
+In addition to being immutable, another benefit of const classes/variables is that they’re canonical instances,
+which means that no matter how many instances you create, as long as the properties used to create them are
+the same, Dart will only see a single instance. You could instantiate User.anonymous() a thousand times across your app without incurring the
+performance hit of having a thousand different objects, BUT you have to use the keyword 'const' during instantiation
+to realize the performance win.
+
+
+!!!
+Make it your goal to use const OBJECTS and CONSTRUCTORS as much as possible. It’s a performance win!
+Key: while using the const class in your code, make sure to instantiate it as const, e.g
+    const user1 = User.Default(); or User user1 = const User.Default()
+    instead of
+    final user1 = User.Default();
+    or User user1 = User.Default();
+If you don't instantiate it as const, you will not get the performance benefits because it will instantiate a new instance every time instead of reusing it.
+
+
+FACTORY CONSTRUCTORS
+The factory constructor is basically a special method that starts with the factory keyword and returns
+an object of the class type. A factory constructor MUST RETURN an instance of it's class type (can be a subclass).
+
+A factory constructor cannot have the same name as a static method in your class.
+
+Factory constructors allow you to hide the implementation details of how you provide the class instance, e.g
+by unpacking values for class variables from a JSON object.
+
+A factory constructor must have a method/function body.
+
+A generative constructor can only create a new instance of the class itself.
+However, factory constructors can return existing instances of the class, or even subclasses of it.
+
+Generative constructors can't redirect to a factory constructor.
+
+Factory constructors can't redirect * (TBD)
+
+Variables/functions of the class can't be accessed from the factory constructor.
+In short, instance members can't be accessed from a factory constructor, just like instance members can't
+be accessed from a static method. FACTORY CONSTRUCTORS ACT MORE LIKE STATIC METHODS, and static methods cannot
+access non-static class members.
+
+How to create a factory, e.g:
+Car (paintColor, driveType, seatType) {...}
+
+factory Car.Manufacture (Map json) {
+ var paintColor = json['paint'];
+ var driveType = json['drive'];
+ var seatType = json['seat_type'];
+
+ return Car(paintColor, driveType, seatType);
+}
+
+CONSTRUCTOR SUMMARY
+Constructors can be:
+- Forwarding/Redirecting or non-forwarding
+- Named or unnamed
+- Generative or factory
+- Constant or not constant
+
+
+
+OBJECTS
+Objects act as REFERENCES to the instances of the class in memory. That means if you assign one object to another,
+the other object simply holds a reference to the same object in memory — NOT A NEW INSTANCE. Changing the values of
+the properties of either object will affect the other, since they both reference the same instance.
+
+If you want to make an actual copy of the class — not just a copy of its reference in memory but a whole new
+object with a deep copy of all the data it contains — then you’ll need to implement that mechanism yourself by
+creating a method in your class that builds up a whole new object.
+
+
+GETTERS
+Use getters and setters to restrict/control the access/usage of properties in your class.
+Setters must be void.
+Setters must have exactly one required positional parameter.
+
+E.g:
+class User {
+String _name;
+
+String get name => _name;
+set name(String name) => this._name = name; // you can do more interesting things than just assigning.
+// you can even use a setter to add stuff to a list like so:
+
+  set otherName(String name) => names.add(name);
+
+  user6.otherName = "Clifford";
+  user6.otherName = "Gail";
+  user6.otherName = "Odhiambo";
+  user6.otherName = "Nyanga";
+
+  print(names); // returns the list of names
+
+int get foo => 4 * 10;
+}
+
+You don’t always need to use getters and setters explicitly. In fact, if all you’re doing is shadowing
+some internal field variable, then you’re better off just using a public variable.
+
+Beauty of Dart: You can change the internal implementation, without the external world being any the wiser.
+You can even do network operations inside a getter function to return a value, but the user of the getter
+wouldn't know.
+
+
+STATIC VARIABLES/METHODS
+These belong to the class and don't belong to any instance of the class
+They are accessed/modified through the class itself. Usually used for constants and singletons.
+e.g User.group_id = 9;
+User.printGroupId () {...}
+
+
+SINGLETON DESIGN PATTERN
+Returning the same instance of the class regardless of the number of calls made.
+Used when only that one instance is required, e.g for a database connection.
+E.g:
+class Database {
+  Database._() { //privatize constructor so that instances can't be created normally
+  ...do something, e.g create the database connection
+  }
+
+  static final Database _database = new Database._(); //instantiate
+
+  static Database getDb () => _database; //access through static method
+
+  factory Database () => _database; //or factory constructor. no matter how many calls, the same instance is returned
+  //it looks exactly like a normal object when called using factory. someone who accesses it might not even realize it's a singleton (encapsulation)
+  //use this when you want to switch to generative constructor later so that you don't have to refactor all the places where you instantiated the database in other classes
+}
+
+UTILITY METHODS
+One use for a static method is to create a utility or helper method that’s associated with the class, but not associated with any particular instance.
+In other languages, some developers like to group related static utility methods in classes to keep them organized. However, in Dart it’s usually
+better to just put these utility methods in their own file as top-level functions. You can then import that file as a library wherever you need
+the utility methods contained within.
+
+
+Factory constructors in many ways are just like static methods, but there are a few differences:
+
+- A factory constructor can only return an instance of the class type or subtype, while a static method can return anything.
+For example, a static method can be asynchronous and return a Future, which you’ll learn about in Chapter 10,
+but a factory constructor can’t do this.
+
+- A factory constructor can be unnamed so that, from the caller’s perspective, it looks exactly like calling
+a generative constructor - can be used in singleton. A static method, on the other hand, must have a name.
+
+- A factory constructor can be const if it’s a forwarding constructor, but a static method can’t.
+
+Note: Static fields and top-level variables, that is, global variables outside of a class, are lazily initialized. That means Dart doesn’t actually
+calculate and assign their values until you use them the first time.
+
+
+LATE KEYWORD
+Use 'late' to delay initialization of a variable. Late makes the variable to be initialized lazily, i.e not initialized until it is first called.
+Use this for example if you want to prevent the compiler from complaining against unset variables in a class.
+Make sure you assign a value to a late variable before you try to access/use it to prevent a runtime 'LateInitializationError' error.
+
+
+
+-------------------------------
+
+
+
+---COLLECTIONS---
+
+LISTS
+Indexed/sequential
+how to create: var colors = ['red', 'green', 'blue'];
+List<String> colors = [...];
+
+Immutable list: use final. contents can still be changed
+
+Deeply immutable list: use const. contents cant be changed
+e.g const colors = <String>[...];
+    var colors = const <String>[...];
+
+Finally, if you want an immutable list but you won’t know the element values until runtime, then you can create one with the 'List.unmodifiable'
+named constructor:
+
+final modifiableList = [DateTime.now(), DateTime.now()];
+final unmodifiableList = List.unmodifiable(modifiableList);
+
+Inadvertently trying to modify an unmodifiable list will cause a runtime error — not a compile-time error. So while mutable data can be unsafe,
+so too can unmodifiable lists.
+
+Accessing first and last items: list.first, list.last (getters)
+Checking if empty or not: list.isEmpty, list.isNotEmpty
+
+Looping over items:
+for(var item in list)...
+OR
+list.forEach((item)=> ...);
+
+You can pass a function as a parameter to a method call with just the function name itself. If the signature of the function that the method call requires as an argument
+is the same as the function parameter you're passing in, then calling the method with just the function's name will work perfectly fine (if everything else is fine).
+E.g
+instead of passing in an anonymous function in the list.forEach((item)=> ...) above, you can do:
+list.forEach(printToUpperCase);
+
+void printToUpperCase(String text) { //the signature of the method you're passing in must be the same as the signature of the method required by the method call above
+  print(text.toUpperCase());
+}
+
+
+
+Spread operator: ...
+Used to combine values of one or more lists into a new one (expand a list into another list)
+e.g var supercars = [...]
+    var dailyDriveCars = [...]
+    var cars = [...supercars, ...dailyDriveCars]
+Null-safe spread operator: ...?. This will check if one of a list being added is null and omit it if it is.
+
+
+COLLECTION 'FOR' AND COLLECTION 'IF'
+Used to build lists.
+'IF' - to include an element based on a condition
+'FOR' - to iterate over a list and use it to generate another list
+
+Example Usage:
+var cars = <String>[
+    'toyota', 'nissan', 'porsche', 'aston martin', 'rolls royce',
+    if (isSuperCar("rimac")) 'Rimac Nevera',
+    for(String car in getCars()) car.toUpperCase()
+  ];
+  print(cars);
+bool isSuperCar(String car) =>
+    const ['ferrari', 'lamborghini', 'koenigesegg', 'bugatti', 'pagani', 'rimac'].contains(car);
+
+List<String> getCars () => const ['ferrari', 'lamborghini', 'koenigesegg', 'bugatti', 'pagani', 'rimac'];
+
+You can combine collection for and collection if:
+List<String> myList = ["extra","ordinary",'!',];
+  final goals = <String>[
+    "I", "want", "to", "be",
+    for(String goal in myList) if(goal != "!") goal.toUpperCase()
+  ];
+
+SETS
+used to create a collection of unique elements. Sets in Dart are similar to their mathematical counterparts.
+Duplicates are not allowed in a set, in contrast to lists, which do allow duplicates.
+<More info in book>
+
+MAPS
+Key-value pairs
+e.g final Map<String, int> map = {};
+    OR
+    final map = <String, int>{};
+
+Getting keys: map.keys OR getting values: map.values OR getting whole entries(key and value): map.entries
+
+Getting length of key-value pairs: map.length
+
+Initializing a map with values:
+E.g
+final inventory = {
+    'cakes': 20,
+    'pies': 14,
+    'donuts': 37,
+    'cookies': 141,
+};
+
+*** MAP SHOULDN'T HAVE DUPLICATE KEYS ***
+
+Accessing elements: String? middleName = myMap['middle_name']; OR String middleName = myMap['middle_name']!;
+Updating element: myMap['middle_name'] = "Gail";
+Removing elements: myMap.remove(key);
+Checking for key or value existence: myMap.containsKey(key)); myMap.containsValue(value);
+
+
+LOOPING OVER ITEMS IN A MAP
+Different techniques:
+1. For-in loop
+for(String key in myMap.keys) {
+    print("$key - ${myMap[key]}");
+  }
+
+2. Anonymous function forEach
+  myMap.forEach((key, value) => print("$key: $value"));
+
+3. Normal function forEach
+  myMap.forEach(printEntry);
+
+  void printEntry(String key, String value) {
+    print("$key -> $value");
+  }
+
+4. Through the 'map.entries' iterable
+Access key through: entry.key
+Access value through: entry.value
+
+  for(var entry in myMap.entries) {
+    print("${entry.key} => ${entry.value}");
+  }
+
+-----------------------------------------------
+HIGHER ORDER METHODS
+
+1. Mapping a list to another list: use map() method
+final myInts = [2,3,5,7,11,13,17,19];
+final mapped = myInts.map((int num) => num * num);
+Function parameter is each item of the list, and the function returns the item to map for the respective item in the list.
+The operation returns an iterable containing the mapped values. If you want to get the list, convert the iterable to a list by doing: iterable.toList()
+
+2. Filtering a collection: use where() method
+final myInts = [2,3,4,5,7,10,11,13,14,17,19];
+final filtered = myInts.where((int item) => item.isEven);
+Supply a function that returns a boolean value that will be used to filter the list. Items that satisfy the boolean (return true) make it to the filtered list.
+
+3. Combine all the elements of a list into a single value, i.e consolidating: use reduce() method
+E.g - reducing to a sum
+final myInts = [2,3,4,5,7,10,11,13,14,17,19];
+final reduced = myInts.reduce((previous, item) => previous + item);
+
+The first function parameter ('previous' in above case) always contains the result of the previous function call, while the second parameter contains
+the current element in the collection.
+
+Using the reduce() method returns an error if the list is empty.
+
+4. Consolidating items, similar to above, but an initial value is provided: use fold() method
+final myInts = [2,3,4,5,7,10,11,13,14,17,19];
+final folded = myInts.fold(29, (int previousValue, int element) => previousValue + element);
+final myInts = [2,3,4,5,7,10,11,13,14,17,19];
+Works like reduce(), but 29 is the starting point. Sum above is 105 but in this case it is 134.
+
+Could be a solution to the reduce() scenario where it fails when the list is empty. If the collection is empty, the initial value is returned.
+
+
+5. Sorting a collection in place (in situ) - use sort() method
+E.g - sorting a list of numbers in order
+final myInts = [10, 5, 14, 7, 17, 4, 3, 19, 11, 2, 13];
+myInts.sort();
+print(myInts);
+
+6. Custom sort - provide your own algorithm for sorting a collection - use sort() method
+
+int ascending(String str1, String str2) => str1.compareTo(str2);
+int descending(String str1, String str2) => str2.compareTo(str1);
+
+final myWords = [
+    "sign",
+    "closed",
+    "father",
+    "approach",
+    "skate",
+    "rhetoric",
+    "tragedy",
+    "sell",
+    "empire",
+    "folk"
+  ];
+
+  print(myWords);
+  myWords.sort(ascending);
+  myWords.sort((String str1, String str2) => str1.compareTo(str2)); //alt to above method call
+  print(myWords);
+  myWords.shuffle();
+  myWords.sort(descending);
+  myWords.sort((String str1, String str2) => str2.compareTo(str1)); //alt to above method call
+  print(myWords);
+
+sort() methods needs an int result that it uses internally for sorting, so your custom sorting method should return an int. Usually 0, -1 or 1.
+
+7. Shuffling a collection in place (in situ) - use shuffle() method
+E.g - sorting a list of numbers in order
+final myInts = [2,3,4,5,7,10,11,13,14,17,19];
+myInts.shuffle();
+print(myInts);
+
+8. Getting a collection in reverse order (last to first) - use 'reversed' getter.
+final myInts = [3, 10, 4, 11, 2, 14, 13, 19, 5, 7, 17];
+final inReversedOrder = myInts.reversed;
+print(inReversedOrder);
+
+Calling the 'reversed' getter doesn't modify the original list. 'reversed' is also lazy - doesn't do any work until you call it
+
+
+9. Combining higher order methods
+You can chain together the higher order methods to get a desired result.
+
+const desserts = ['cake', 'pie', 'donuts', 'brownies'];
+final bigTallDesserts = desserts
+    .where((dessert) => dessert.length > 5)
+    .map((dessert) => dessert.toUpperCase());
+
+
+----------------------------------------------------------------------------------------------------
+
+NULLABILITY
+
+For any nullable variable in Dart, if you don’t initialize it with a value, it’ll be given the default value of null.
+When you use a non-nullable type - without the ? - you can be absolutely positively sure it will never have a null value, except if you use the late keyword.
+Eliminating the possibility of being surprised by null prevents a whole host of errors.
+
+NULL-AWARE OPERATORS
+If-null operator (??) - If the value on the left isn’t null, then use it; otherwise, go with
+                        the value on the right
+                        e.g String? message;
+                            final text = message ?? 'Error';
+
+Null-aware assignment operator (??=) -  when you have a SINGLE VARIABLE that you want to update if its value is null.
+                        e.g double? fontSize;
+                            fontSize ??= 24; // provide a default value if fontSize is null.
+                            fontSize = fontSize ?? 24; - another way to do it, but long-form
+
+Null-aware access/invocation operator (?.) - The null-aware access operator returns null if the left-hand side is null.
+                                  Otherwise, it returns the property on the right-hand side.
+                                  e.g int? age;
+                                      print(age?.isNegative);
+                                  returns null. If it had a non-null value, that value would be returned
+                            When used for method invocation, only calls method when value is non-null.
+                            The ?. operator is useful if you want to only perform an action when the value is non-null.
+
+Null assertion operator (!) - Sometimes Dart isn’t sure whether a nullable variable is null or not, but you know it’s not. So if you’re absolutely
+                              sure that a variable isn’t null, you can turn it into a non-nullable type by using the null assertion operator (!), or
+                              sometimes more generally referred to as the bang operator.
+                              e.g
+                              bool? isBeautiful(String? item) {
+                              if (item == 'flower') {
+                              return true;
+                              } else if (item == 'garbage') {
+                              return false;
+                              }
+                              return null;
+                              }
+
+                              This: bool flowerIsBeautiful = isBeautiful('flower'); will return an error. However, you know that the result when 'flower' is
+                              passed in can't be null, so you do:
+                              bool flowerIsBeautiful = isBeautiful('flower')!; - add exclamation mark at end
+                              Alternative - casting down to non-null type: bool flowerIsBeautiful = isBeautiful('flower') as bool;
+
+                              Using the assertion operator (or casting down to a non-nullable type) will CRASH YOUR APP with a runtime ERROR if the value
+                              actually does turn out to be null, so don’t use the assertion operator unless YOU CAN GUARANTEE that the variable isn’t null.
+
+                              Alternative to the assertion operator that won’t ever crash the app:
+                              bool flowerIsBeautiful = isBeautiful('flower') ?? true;
+
+                              Think of the ! assertion operator as a dangerous option and one to be used sparingly. By using the assertion operator,
+                              you’re telling Dart that you want to opt-out of null safety, that you can handle it yourself. This is something akin
+                              to using dynamic to tell Dart that you want to opt-out of type safety.
+
+Null-aware cascade operator (?..) - Cascade operator is used to chain assigning properties to an object, e.g
+                                User user = User()
+                                ..name = 'Ray'
+                                ..id = 42;
+
+                                However, if your object is nullable, like in the following example:
+                                User? user;
+                                Then you can use the null-aware cascade operator (?..):
+
+                                user
+                                  ?..name = 'Ray'
+                                  ..id = 42;
+
+                              You only need to use ?.. for the first item in the chain. If user is null, then the chain will be short-circuited, that is,
+                              terminated, without calling the other items in the cascade chain.
+
+Null-aware index operator (?[]) - used for accessing the elements of a list when the list itself might be null.
+                                e.g, you can have a list that is null: List<int>? lst;
+                                If you try: print(lst[4]); you get an error because you're accessing index of an item in a list that is null/could be null.
+                                You instead do: print(lst?[4]); accessing conditionally by using a question mark. If it is null, it returns null
+
+
+
+
+
+----------------------------------------------------------------------------------------------------
+
+
+---ADVANCED CLASSES---
+
+INHERITANCE
+Use keyword 'extends'.
+In a child class constructor, the super constructor should be called to initialize the variables.
+super always goes last in an initializer list.
+
+Dart always calls the default constructor for the super class if there are no arguments to pass. The reason that you or Dart always need to make the
+super call is to ensure that all of the field values have finished initializing.
+
+
+use @override to make new implementations of the parent class properties in the child class
+
+Checking Type: Use keyword: is or is! (just means is not), e.g
+Student extends User
+print(student is User) - true
+print(student is! User) - false
+print(user is Student) - false unless the user is actually an instance of student
+
+PROBLEM WITH INHERITANCE
+It causes tight coupling of parents and children. Changing code in parent affects the child as well, might break it.
+Also, what if the child changes identity to another child?
+
+PREFER COMPOSITION OVER INHERITANCE.
+When appropriate, you should add behavior to a class rather than share behavior with an ancestor
+E.g class Student {
+        List<Role>? roles;
+        //Role should be abstract enough so that a role could be a band member, an athlete or a student union member
+    }
+Inheritance can be good when a subclass needs all of the behavior of its parent. However, when you only need
+some of that behavior, you should consider passing in the behavior as a parameter, or perhaps even using a mixin
+
+The whole Flutter framework is organized around the idea of composition. You build your UI as a tree of widgets, where each widget does one simple thing
+and has zero or more child widgets that also do one simple thing
+
+ABSTRACTION
+e.g abstract class User{}
+Create an abstract class as an implementation blueprint for the child classes of the parent.
+Abstract classes have abstract methods which must be implemented in the children independent from the parent => de-coupling
+Abstract classes can also have general instance methods which are implemented inside them.
+
+
+INTERFACES
+Interfaces are similar to abstract classes in that they let you define the behavior you expect for all classes that implement the interface.
+They’re a means of hiding the implementation details of the concrete classes (which implement the interfaces) from the rest of your code.
+
+There’s a famous adage related to this that goes, code against interfaces, not implementations. You define an interface,
+and then you code your app to use that interface only. While you must implement the interface with concrete classes,
+the rest of your app shouldn't know anything about those concrete classes, only the interface.
+
+Using an interface and then implementing it REQUIRES you to implement all methods and member variables in the abstract class (interface)
+including those that have been implemented already in the abstract class.
+Basically, using the interface directive renders all methods in the super class abstract, including any methods in the super class
+that already have their own implementation. So you have to supply your own implementation, just regarding the super class as a blueprint.
+
+How to do interfaces
+E.g
+abstract class DataRepository {...} - interface
+class FakeWebServer implements DataRepository {...}
+
+You could potentially use the FakeWebServer implementation directly like so:
+final DataRepository repository = new FakeWebServer();
+final temperature = repository.fetchTemperature('Berlin');
+
+...But this defeats the whole point of trying to keep the implementation details separate from the business logic.
+When you get around to swapping out the FakeWebServer with another class, you’ll have to go back and make updates at
+every place you mentioned FakeWebServer in your business logic.
+
+SOLUTION: Use a factory constructor in the interface. When it comes time to swap in the real implementation,
+you only need to update the subclass returned by the factory constructor in the DataRepository interface.
+e.g factory DataRepository() => new FakeWebServer();
+
+To the end user, it will look like the interface is being initialized (which should be impossible), but it's just a matter of abstraction
+This way, the end user is only affected when the interface changes.
+
+
+!!!
+class SomeClass extends AnotherClass {}
+class SomeClass implements AnotherClass {}
+
+When you extend AnotherClass, SomeClass has access to any logic or variables in AnotherClass.
+However, if SomeClass implements AnotherClass, SomeClass must provide its own version of ALL= methods and variables in AnotherClass.
+
+
+MIXINS
+Mixins are code blocks for sharing code that is exactly similar between classes. To make a mixin, you take whatever concrete code you want to share
+with different classes, and package it in its own special mixin class.
+E.g example below:
+
+Both Whale and Shark swim. They inherit from the Animal class and they have the exact same implementations for the method swim(). Instead of duplicating the
+code in both classes, we create a mixin called Swimmer that will bundle the shared code, and then both classes can use the mixin by accessing it using 'with'.
+In short, you don't have to write the mixed-in methods in the Whale or Shark class.
+
+Dog and Shark also have exact same implementation of eat(). Move this code into the Muncher mixin and then both classes can share the code together.
+
+You can 'inherit' code from as many mixins as you want in a class.
+
+class Dog extends Animal with Muncher {
+
+  Dog(String name): super(name);
+
+  @override
+  void move() {
+    print("Dash dash");
+  }
+}
+
+class Whale extends Animal with Swimmer {
+
+  Whale(String name) : super(name);
+
+  @override
+  void eat() {
+    print("Swallow!");
+  }
+
+  void ventilate () {
+    print("Shooting water");
+  }
+}
+
+class Shark extends Animal with Swimmer, Muncher {
+
+  Shark(String name) : super(name);
+}
+
+mixin Swimmer {
+  void move() {
+    print("Swim swim!");
+  }
+}
+
+mixin Muncher {
+
+  void eat() {
+    print("Munch munch!");
+  }
+}
+
+
+
+BIGINT
+A Dart object for creating an arbitrarily large integer value.
+To create from a num(int or double), use e.g, BigInt foo = BigInt.from(10);
+
+
+----------------------------------------------
+
+
+ASYNCHRONOUS PROGRAMMING
+Dart is single-threaded. It is based around concurrency on a single thread.
+Uses event loop to schedule tasks.
+There is the main thread running on the main isolate, and then there are queues for asynchronous tasks that don't need to be executed immediately.
+These tasks are placed on queues.
+Two types of queues: 1. Micro-task queue 2. Event queue
+
+All synchronous tasks must be completed first on the main thread, and then the event loop checks for tasks
+on the micro-task queue and places them on the main thread for execution. After all micro-tasks are completed,
+tasks on the event queue are then placed on the main thread one-by-one for execution. The loop goes on and on.
+
+PLACING A TASK ON THE EVENT QUEUE
+Use a Future:
+
+print("Before future event");
+
+  Future<int>.delayed(Duration(seconds: 3), ()=> 502)
+    .then((result) => print("Found a result: $result"))
+    .whenComplete(() => print("The future event is finished"))
+    .catchError((error) {
+      print("Oops! An error occurred executing the future event");
+  });
+
+print("After initializing future event");
+
+The statements after the declaration of the Future task are executed first because they are synchronous tasks.
+All the synchronous code has to finish first before the Future task is removed from the event queue and placed on
+the main thread for execution.
+
+USING ASYNC-AWAIT
+Is a more readable way to use Futures, making them look more like synchronous code.
+If a function uses the 'await' keyword, then it must return a Future and the function must use the 'async'
+keyword to denote that it's an asynchronous function, and that the results will go to the event queue.
+
+Future<void> counter () async {
+  final foo = await Future<int>.delayed(Duration(milliseconds: 1), () {
+    int c;
+    for(c = 0; c < 40000; c++) {
+      print("C is: $c");
+    }
+    return c;
+  });
+  print(foo);
+  print(foo.runtimeType);
+}
+
+In front of the future, you added the await keyword. Once Dart sees await, THE REST OF THE FUNCTION WON'T RUN (it will 'await')
+until the future completes. If the future completes with a value, there are no callbacks. You have direct access to that value.
+Thus, the runtime type of the value variable 'foo' above is not Future, but int.
+
+If you use await and at the same time you use 'then' while in the Future, you will not be able to have direct access to that value
+like in the 'foo' situation above. You will access the value through the function of 'then'.
+
+In other words, you can't use both 'await' and the 'then' callback.
+
+USING TRY-CATCH-FINALLY IN ASYNC-AWAIT
+If you use async-await, don't use callbacks, use try-catch-finally.
+If you use 'then' callback, use catchError and whenComplete callbacks accordingly.
+
+The catch and finally blocks correspond to the catchError and whenComplete callbacks in the traditional Future construct
+of Future.then().catchError().whenComplete();
+If the future completes with an error, then the try block will immediately be aborted and the catch block will be called. But no matter whether the
+future completes with a value or an error, the finally block will always be called.
+
+try {
+    final foo = await Future<int>.delayed(Duration(milliseconds: 1), () {
+        int c;
+        for(c = 0; c < 40000; c++) {
+            print("C is: $c");
+        }
+        return c;
+    });
+    print(foo);
+    print(foo.runtimeType);
+} catch (e) {
+//handle the error
+} finally {
+//code that gets executed regardless of whether there was an error or not
+}
+
+
+-----------------------------------
+
+NETWORKING
+
+-----------------------------------
+
+GETTING DATA FROM A URL
+Use the http class: import 'package:http/http.dart' as HTTP;
+
+  Uri url = Uri.parse("https://jsonplaceholder.typicode.com/todos/1");
+  HTTP
+    .get(url) //get the data. returns a Future
+    .then((HTTP.Response response) {
+      if(response.statusCode == 200) { //check the status code, if not 200 throw exception and handle it, e.g let the user know
+        TodoItem item = TodoItem.fromJson(response.body); //make use of the response body
+        print("To do item: $item");
+      } else throw HttpException(response.reasonPhrase ?? "Error");
+  }).catchError((e) {
+    //catch errors
+
+    if(e is SocketException) print("Socket error occurred");
+    else if(e is HttpException) print("Http 404: $e");
+    else print("Unknown error occurred");
+
+  }).whenComplete(() => "Fetch complete.");
+
+
+CATCHING MULTIPLE ERRORS IN TRY-CATCH EXAMPLE
+
+try {
+final url = 'https://jsonplaceholder.typicode.com/todos/1';
+}
+on SocketException catch (error) { //catch
+    print(error);
+} on HttpException catch (error) { //multiple
+    print(error);
+} on FormatException catch (error) { //errors
+    //json exception
+    print(error);
+}
+
+
+
+DECODING AND ENCODING USING JSON
+import 'dart:convert' as CONVERTER;
+To encode: CONVERTER.jsonEncode(map); //parameter is a map, function returns a JSON string
+To decode: CONVERTER.jsonDecode(string); //parameter is a string, function returns a map
+
+TIP when json decoding nested json objects:
+    When decoding, use generic variables to refer to the data to prevent type-checking errors.
+
+    E.g:
+
+    String exploreRecipeJson = await _loadFromStatic("file_path.json");
+
+    //use generic type, don't do e.g List<<Map, String>> lst
+    List recipeList = jsonDecode(exploreRecipeJson)['recipes'];
+    return recipeList.map((e) => ExploreRecipe.fromJson(e)).toList();
+
+
+USING CLIENT (http.Client) for requests. (Streams involved)
+
+    final HTTP.Request request = HTTP.Request("GET", Uri.parse("https://jsonplaceholder.typicode.com/todos"));
+    final response1 = await client.send(request);
+    final stream = response1.stream;
+
+    StringBuffer sb = new StringBuffer();
+    await for (var data in stream.transform(CONVERTER.utf8.decoder)) {
+      sb.write(data);
+    }
+
+    List rawTodos = CONVERTER.jsonDecode(sb.toString());
+    List<Todo> todos = rawTodos.map((e) => Todo.fromMap(e)).toList();
+
+    for(Todo todo in todos) {
+      print("Todo: $todo\n");
+    }
+
+RETRYING REQUESTS
+Use RetryClient. Import statement: import 'package:http/retry.dart';
+
+RetryClient client = new RetryClient(
+    HTTP.Client(), //the usual http client that you are wrapping around
+    retries: 2, //number of retries. the default delay between retries is 500ms and the default no. of retries is 3
+    when: (response) => response.statusCode == 404 //retry when what happens? default is when a 503 (Temporary Failure)
+                                                   //status code is returned
+);
+
+-------------------------------------
+
+MULTI-THREADING
+
+--------------------------------------
+
+CREATING A NEW THREAD
+Dart allows you to create a new isolate that is separate from the main isolate if you want to run intensive operations
+that might block the app. In this case, Futures are not suitable because once a future task (an intensive one) is on the main thread,
+it will stay there and block until the task is finished before the next task can be executed.
+
+By creating a new isolate that is independent of the main isolate, you can avoid this blocking behavior because tasks are not
+competing for the same thread. The new isolate that you create communicates with the main isolate through ports to send/receive
+messages.
+
+How to create:
+
+Create a new file containing the 'expensive' method that you want to execute at the top level.
+That method can only receive one argument. Use a List if you want to supply more parameters.
+
+import 'dart:isolate';
+
+void isolated_count(SendPort sendPort) {
+  int c = 0;
+  for(c = 0; c < 1000; c++) {
+    print("isolated: $c");
+  }
+  sendPort.send(c);
+}
+
+AND THEN spawn a new isolate on the main thread. This creates a new thread on the spawned isolate that works
+away from the main one. After it's done, close the port and kill the isolate.
+
+final receivePort = new ReceivePort();
+
+final isolate = await Isolate.spawn(isolated_count, receivePort.sendPort);
+receivePort.listen((message) {
+    print("message received from send port: $message");
+    receivePort.close();
+    isolate.kill();
+});
+
+
+
+--------------------------------------
+
+THIS IS REALLY REALLY DOPE!
+
+---------------------------------------
+
+Look at the extent to which functions can be used so dynamically in Dart.
+You can take it to a whole new level and pass functions as arguments and even use them as class member variables,
+and even assign functions to function variables. This makes it so easy to do callbacks.
+
+e.g
+
+void main() {
+  CountDown c = new CountDown(300, onCountDown: (int value) {
+    print("Counted down: $value");
+  });
+  c.countDown();
+}
+
+class CountDown {
+  int value;
+  Function(int c)? _onCountDown;
+
+  CountDown(int value, {Function(int c)? onCountDown}) : this.value = value, this._onCountDown = onCountDown {
+
+  }
+
+  void countDown () {
+    for(int c = this.value; c > 0; c--) {
+      _onCountDown?.call(c);
+    }
+  }
+}
+
+--------------------------------------------------------
+
+JSON SERIALIZATION
+Json encoding and decoding in Dart is fairly easy...
+
+import 'dart:convert' as CONVERTER;
+To encode: CONVERTER.jsonEncode(map); //parameter is a map, function returns a JSON string
+To decode: CONVERTER.jsonDecode(string); //parameter is a string, function returns a map
+
+...but the above functionality does not account for when you want to serialize a class to and from a json object.
+You would have to manually write the code for doing so. Using json without classes to model it in a huge project can
+be very cumbersome, because what if you change the name of a json key - you would have to update it everywhere where the previous
+key was in your whole project. Also, you don't get the benefits of autocomplete/hints of field names of the objects (which you get
+when you use classes to model the json).
+
+The json_serializable and json_annotation libraries come in handy in this situation.
+First, include these in pubspec.yaml: execute commands
+    dart/flutter(dart or flutter, whichever) pub add json_serializable --dev
+    dart/flutter pub add json_annotation
+    dart/flutter pub add build_runner - to provide code generation for serializing classes automatically
+
+    USAGE:
+
+    //this file is named user_json.dart
+    //imports for json stuff here...
+
+    //and then include this line. ignore warnings from the editor
+
+    part user_json.g.dart;
+
+    @JsonSerializable() //annotate a class as JsonSerializable to indicate that it is a json model
+    class User {
+      @JsonKey(name: "user_name") String userName; //use JsonKey annotation to provide a key for a field
+      //not necessary if you want the field name in the class to be the same as the one in the json
+      @JsonKey(name: "password") String password;
+      @JsonKey(
+        name: "date_created",
+        toJson: _dateToStr //providing a custom function for converting this field to json
+      ) DateTime dateCreated;
+
+      User({required this.userName, required this.password, DateTime? dateCreated}) : this.dateCreated = dateCreated ?? DateTime.now();
+
+      factory User.fromJson(String jsonStr) => _$UserFromJson( //this function will be auto-generated to convert the provided map into an instance of this class
+        jsonDecode(jsonStr) //dart's own internal function for decoding json string to a map
+      );
+
+      Map<String, dynamic> mapify() => _$UserToJson(this); //this function will be auto-generated to convert this class into a json map
+
+      static _dateToStr(DateTime date) => DateFormat("yyyy-MM-dd").format(date);
+
+      @override
+      String toString() => jsonEncode( //jsonEncode is dart's own internal function for converting map to json string
+        mapify()
+      );
+    }
+
+    After doing the above execute the following command in the terminal:
+
+    flutter(or dart) run build_runner build
+
+    And then you can use the class elsewhere:
+    User user = User(...fields);
+    user.toString(); //converts to json string in the background
+
+    User userB = User.fromJson(jsonString);
+    user.mapify(); //convert into a json map or do whatever with it
+
+This method only deals with maps and classes that represents the maps. You have to supply the map and not the string.
+--------------------------------------------------------
